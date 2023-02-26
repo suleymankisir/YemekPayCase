@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
-@Service
+@Configuration
 @AllArgsConstructor
 public class ModelMapperConfiguration {
     private ModelMapper modelMapper;
