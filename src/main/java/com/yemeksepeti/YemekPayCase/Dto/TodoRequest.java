@@ -1,4 +1,4 @@
-package com.yemeksepeti.YemekPayCase.dto;
+package com.yemeksepeti.YemekPayCase.Dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

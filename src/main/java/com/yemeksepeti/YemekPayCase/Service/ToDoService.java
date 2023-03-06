@@ -1,10 +1,11 @@
 package com.yemeksepeti.YemekPayCase.Service;
 
+import com.yemeksepeti.YemekPayCase.Dto.TodoRequest;
+import com.yemeksepeti.YemekPayCase.Dto.TodoResponse;
 import com.yemeksepeti.YemekPayCase.Mapper.ModelMapperConfiguration;
 import com.yemeksepeti.YemekPayCase.Model.ToDo;
 import com.yemeksepeti.YemekPayCase.Repo.ToDoRepo;
-import com.yemeksepeti.YemekPayCase.dto.TodoRequest;
-import com.yemeksepeti.YemekPayCase.dto.TodoResponse;
+
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,9 +30,11 @@ public class ToDoService {
     }
 
     public TodoResponse getById(int id){
-        ToDo toDo = toDoRepo.findById(id).get();
-        return this.modelMapperConfiguration.forResponse().map(toDo,TodoResponse.class);
-
+        Optional<ToDo> toDo = toDoRepo.findById(id);
+        if(toDo.isPresent()){
+            return this.modelMapperConfiguration.forResponse().map(toDo.get(),TodoResponse.class);
+        }
+        throw new RuntimeException();
     }
 
     public TodoResponse add(TodoRequest todoRequest){
@@ -41,38 +44,32 @@ public class ToDoService {
     }
 
     @Transactional
-    public Optional<?> updateById(int id,TodoRequest todoRequest){
-        if (toDoRepo.findById(id).isPresent()) {
+    public Optional<TodoResponse> updateById(int id,TodoRequest todoRequest) {
+
+        Optional<ToDo> todo = toDoRepo.findById(id);
+        if(todo.isPresent()){
             ToDo updateToDo = this.modelMapperConfiguration.forRequest().map(todoRequest, ToDo.class);
             updateToDo.setId(id);
             toDoRepo.save(updateToDo);
             TodoResponse todoResponse = this.modelMapperConfiguration.forResponse().map(updateToDo, TodoResponse.class);
-
             return Optional.ofNullable(todoResponse);
         }
-        return Optional.of("Todo Not Found");
+        throw new RuntimeException();
+
+
     }
 
 
-    public Optional<?> updateCompletedId(int id,boolean completed){
-        int i = toDoRepo.updateById(id,completed);
-        if (i==1){
-            ToDo toDo = toDoRepo.findById(id).get();
-            return Optional.ofNullable(this.modelMapperConfiguration.forResponse().map(toDo,TodoResponse.class));
-        }
-        else
-            return Optional.of("there is a problem");
-    }
 
-    public Optional<?> deleteById(int id){
+    public Optional<TodoResponse> deleteById(int id){
+
 
         Optional<ToDo> toDoOptional = toDoRepo.findById(id);
-        if (toDoOptional.isPresent()) {
-            this.toDoRepo.deleteById(id);
+        if (toDoOptional.isPresent()){
+            toDoRepo.deleteById(id);
             return Optional.ofNullable(this.modelMapperConfiguration.forResponse().map(toDoOptional.get(),TodoResponse.class));
         }
-        else
-            return Optional.of("Todo not Found");
+        throw new RuntimeException();
     }
 
 }

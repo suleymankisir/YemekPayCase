@@ -1,9 +1,10 @@
 package com.yemeksepeti.YemekPayCase.Controller;
 
+import com.yemeksepeti.YemekPayCase.Dto.TodoRequest;
 import com.yemeksepeti.YemekPayCase.Service.ToDoService;
-import com.yemeksepeti.YemekPayCase.dto.TodoRequest;
+
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("api/todo")
 @AllArgsConstructor
+@RestControllerAdvice("ToDoService.class")
 public class ToDoController {
 
     private ToDoService toDoService;
@@ -35,10 +37,6 @@ public class ToDoController {
         return ResponseEntity.ok(toDoService.updateById(id,todoRequest));
     }
 
-    @PutMapping("/completed/{id}")
-    public ResponseEntity<?> updateCompletedId(@PathVariable("id") int id,@RequestParam boolean completed){
-        return ResponseEntity.ok(toDoService.updateCompletedId(id,completed));
-    }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteById(@PathVariable("id") int id){
