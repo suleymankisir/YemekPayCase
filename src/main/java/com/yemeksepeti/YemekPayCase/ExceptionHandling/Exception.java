@@ -1,11 +1,11 @@
-package com.yemeksepeti.YemekPayCase.exception;
+package com.yemeksepeti.YemekPayCase.ExceptionHandling;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
-public class exception {
+public class Exception {
 
     private Exception e;
 
